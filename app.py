@@ -359,6 +359,7 @@ def all_gifs():
 def create_collection():
     form = CollectionCreateForm()
     gifs = Gif.query.all()
+
     choices = [(str(g.id), g.title) for g in gifs]
     form.gif_picks.choices = choices
     if form.validate_on_submit():
