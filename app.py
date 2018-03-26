@@ -368,7 +368,7 @@ def create_collection():
         print("GIFS SELECTED", gifs_selected)
         gifs_objects = [get_gif_by_id(int(id)) for id in gifs_selected]
         print("GIFSS RETURNED", gifs_objects)
-        get_or_create_collection(form.name.data,current_user,form.gif_picks.data)
+        get_or_create_collection(form.name.data,current_user,gifs_objects)
         return "Collection made"
     return render_template('create_collection.html',form=form) 
     # TODO 364: If the form validates on submit, get the list of the gif ids that were selected from the form. Use the get_gif_by_id function to create a list of Gif objects.  Then, use the information available to you at this point in the function (e.g. the list of gif objects, the current_user) to invoke the get_or_create_collection function, and redirect to the page that shows a list of all your collections.
@@ -388,8 +388,8 @@ def collections():
 def single_collection(id_num):
     id_num = int(id_num)
     collection = PersonalGifCollection.query.filter_by(id=id_num).first()
-    gifs = collection.gifs.all()
-    return render_template('collection.html',collection=collection, gifs=gifs)
+    gifs = collection.gif.all()
+    return render_template('collection.html',collection=collection, gif=gifs)
 
 if __name__ == '__main__':
     db.create_all()
