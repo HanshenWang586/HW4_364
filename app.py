@@ -359,11 +359,17 @@ def all_gifs():
 def create_collection():
     form = CollectionCreateForm()
     gifs = Gif.query.all()
-
-    choices = [(str(g.id), g.title) for g in gifs]
+    choices = []
+    for g in gifs:
+        choices.append((g.id, g.title))
     form.gif_picks.choices = choices
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        gifs_selected = form.gif_picks.data # list?
+        print("GIFS SELECTED", gifs_selected)
+        gifs_objects = [get_gif_by_id(int(id)) for id in gifs_selected]
+        print("GIFSS RETURNED", gifs_objects)
         get_or_create_collection(form.name.data,current_user,form.gif_picks.data)
+        return "Collection made"
     return render_template('create_collection.html',form=form) 
     # TODO 364: If the form validates on submit, get the list of the gif ids that were selected from the form. Use the get_gif_by_id function to create a list of Gif objects.  Then, use the information available to you at this point in the function (e.g. the list of gif objects, the current_user) to invoke the get_or_create_collection function, and redirect to the page that shows a list of all your collections.
     # If the form is not validated, this view function should simply render the create_collection.html template and send the form to the template.
